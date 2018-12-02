@@ -29,11 +29,11 @@ public:
     }
 
     //Ports
-    blocking_in<CUtoME_IF> COtoME_port; // read_instruction/load/store
-    blocking_out<MEtoCU_IF> MEtoCO_port; // store/load done
+    blocking_in<COtoME_IF> COtoME_port; // read_instruction/load/store
+    blocking_out<MEtoCO_IF> MEtoCO_port; // store/load done
 
-    CUtoME_IF COtoME_data;
-    MEtoCU_IF MEtoCO_data;
+    COtoME_IF COtoME_data;
+    MEtoCO_IF MEtoCO_data;
 
     ofstream *log_file; // log file
 

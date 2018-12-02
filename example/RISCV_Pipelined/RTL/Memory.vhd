@@ -18,10 +18,10 @@ entity Memory is
     port(
         clk                  : in  std_logic;
         rst                  : in  std_logic;
-        CtlToMem_port        : in  CUtoME_IF;
+        CtlToMem_port        : in  COtoME_IF;
         CtlToMem_port_sync   : in  bool;
         CtlToMem_port_notify : out bool;
-        MemToCtl_port        : out MEtoCU_IF;
+        MemToCtl_port        : out MEtoCO_IF;
         MemToCtl_port_sync   : in  bool;
         MemToCtl_port_notify : out bool
     );

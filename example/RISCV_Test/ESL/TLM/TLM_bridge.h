@@ -21,8 +21,8 @@ public:
     tlm::tlm_initiator_socket<> bridgeSocket;
 
     //Ports
-    blocking_in<CUtoME_IF> COtoBR_port;  // read_instruction/load/store
-    blocking_out<MEtoCU_IF> BRtoCO_port;    // store/load done
+    blocking_in<COtoME_IF> COtoBR_port;  // read_instruction/load/store
+    blocking_out<MEtoCO_IF> BRtoCO_port;    // store/load done
 
     // Dummy method:
     void invalidate_direct_mem_ptr(sc_dt::uint64 start_range,
@@ -52,8 +52,8 @@ public:
     }
 
     // SCAM interface data
-    CUtoME_IF COtoBR_data;
-    MEtoCU_IF BRtoCO_data;
+    COtoME_IF COtoBR_data;
+    MEtoCO_IF BRtoCO_data;
 
     // TLM interface data
     unsigned char data[4];

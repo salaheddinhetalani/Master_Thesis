@@ -34,16 +34,16 @@ public:
     }
 
     // ports for communication with memory
-    blocking_out<CUtoME_IF> toMemoryPort;
-    blocking_in<MEtoCU_IF> fromMemoryPort;
+    blocking_out<COtoME_IF> toMemoryPort;
+    blocking_in<MEtoCO_IF> fromMemoryPort;
 
     // ports for communication with register file
     master_in<RegfileType> fromRegfilePort;
     master_out<RegfileWriteType> toRegfilePort;
 
     // data for communication with memory
-    CUtoME_IF memoryAccess;
-    MEtoCU_IF fromMemoryData;
+    COtoME_IF memoryAccess;
+    MEtoCO_IF fromMemoryData;
 
     // data for communication with register file
     RegfileWriteType regfileWrite;

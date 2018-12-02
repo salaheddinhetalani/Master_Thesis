@@ -19,8 +19,8 @@
  * ##################
  * ADD YOUR CORE IMPLEMENTATION HERE
  */
-#include "../../RISCV_ISA/ESL/Core.h"
-//#include "../../RISCV_Pipelined/ESL/Core.h"
+//#include "../../RISCV_ISA/ESL/Core.h"
+#include "../../RISCV_Pipelined/ESL/Core.h"
 
 // TLM = 1 -> using TLM bridge and TLM memory
 // TLM = 0 -> SCAM interface only
@@ -85,8 +85,8 @@ void Core_test::perform_test() {
     Memory ME("ME", &hex_file, &log_file);
 
     // Channel instantiation
-    Blocking<CUtoME_IF> COtoME_channel("COtoME_channel");
-    Blocking<MEtoCU_IF> MEtoCO_channel("MEtoCO_channel");
+    Blocking<COtoME_IF> COtoME_channel("COtoME_channel");
+    Blocking<MEtoCO_IF> MEtoCO_channel("MEtoCO_channel");
 
     // Port binding:
     CO.COtoME_port(COtoME_channel);
@@ -102,8 +102,8 @@ void Core_test::perform_test() {
     TLM_bridge BR("TLM_BR");
 
     // SCAM Channel instantiation (connecting to TLM bridge)
-    Blocking<CUtoME_IF> COtoBR_channel("COtoBR_channel");
-    Blocking<MEtoCU_IF> BRtoCO_channel("BRtoCO_channel");
+    Blocking<COtoME_IF> COtoBR_channel("COtoBR_channel");
+    Blocking<MEtoCO_IF> BRtoCO_channel("BRtoCO_channel");
 
     // Bind SCAM interface
     CO.COtoME_port(COtoBR_channel);

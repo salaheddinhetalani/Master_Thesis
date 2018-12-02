@@ -13,14 +13,14 @@ enum ME_AccessType {
     ME_X, ME_RD, ME_WR
 };
 
-struct CUtoME_IF {
+struct COtoME_IF {
     ME_AccessType req;
     ME_MaskType mask;
     unsigned int addrIn;
     unsigned int dataIn;
 };
 
-struct MEtoCU_IF {
+struct MEtoCO_IF {
     unsigned int loadedData;
 };
 

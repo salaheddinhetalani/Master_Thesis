@@ -37,14 +37,14 @@ public:
         SC_THREAD(run);
     }
 
-    blocking_out<CUtoME_IF> CUtoME_port;
-    blocking_in<MEtoCU_IF> MEtoCU_port;
+    blocking_out<COtoME_IF> CUtoME_port;
+    blocking_in<MEtoCO_IF> MEtoCU_port;
 
     master_out<CUtoDP_IF> CUtoDP_port;
     master_in<DPtoCU_IF> DPtoCU_port;
 
-    CUtoME_IF CUtoME_data;
-    MEtoCU_IF MEtoCU_data;
+    COtoME_IF CUtoME_data;
+    MEtoCO_IF MEtoCU_data;
 
     DEtoCU_IF DEtoCU_data;
 

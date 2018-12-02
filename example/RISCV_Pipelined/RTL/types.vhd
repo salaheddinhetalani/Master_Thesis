@@ -37,14 +37,14 @@ package SCAM_Model_types is
     type ALUfuncType         is (ALU_ADD, ALU_SUB, ALU_SLL, ALU_SRL, ALU_SRA, ALU_AND, ALU_OR, ALU_XOR, ALU_SLT, ALU_SLTU, ALU_COPY1, ALU_X);
     type AL_OperandSelType   is (OP_REG, OP_IMM, OP_PC, OP_X);
 
-    type CUtoME_IF is record
+    type COtoME_IF is record
         req    : ME_AccessType;
         mask   : ME_MaskType;
         addrIn : Unsigned (31 downto 0);
         dataIn : Unsigned (31 downto 0);
     end record;
 
-    type MEtoCU_IF is record
+    type MEtoCO_IF is record
         loadedData : Unsigned (31 downto 0);
     end record;
 

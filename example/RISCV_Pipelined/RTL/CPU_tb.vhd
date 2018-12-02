@@ -16,10 +16,10 @@ architecture sim of CPU_tb is
         port(
             clk                : in  std_logic;
             rst                : in  std_logic;
-            CUtoME_port        : out CUtoME_IF;
+            CUtoME_port        : out COtoME_IF;
             CUtoME_port_sync   : in  bool;
             CUtoME_port_notify : out bool;
-            MEtoCU_port        : in  MEtoCU_IF;
+            MEtoCU_port        : in  MEtoCO_IF;
             MEtoCU_port_sync   : in  bool;
             MEtoCU_port_notify : out bool
         );
@@ -29,10 +29,10 @@ architecture sim of CPU_tb is
         port(    
             clk                  : in  std_logic;
             rst                  : in  std_logic;
-            CtlToMem_port        : in  CUtoME_IF;
+            CtlToMem_port        : in  COtoME_IF;
             CtlToMem_port_sync   : in  bool;
             CtlToMem_port_notify : out bool;
-            MemToCtl_port        : out MEtoCU_IF;
+            MemToCtl_port        : out MEtoCO_IF;
             MemToCtl_port_sync   : in  bool;
             MemToCtl_port_notify : out bool
         );
@@ -41,10 +41,10 @@ architecture sim of CPU_tb is
     signal clk : std_logic := '0';
     signal rst : std_logic;
 
-    signal CUtoME_port        : CUtoME_IF;
+    signal CUtoME_port        : COtoME_IF;
     signal CUtoME_port_sync   : bool;
     signal CUtoME_port_notify : bool;
-    signal MEtoCU_port        : MEtoCU_IF;
+    signal MEtoCU_port        : MEtoCO_IF;
     signal MEtoCU_port_sync   : bool;
     signal MEtoCU_port_notify : bool;
 

@@ -11,10 +11,10 @@ entity Core is
     port(
         clk                : in  std_logic;
         rst                : in  std_logic;
-        CUtoME_port        : out CUtoME_IF;
+        CUtoME_port        : out COtoME_IF;
         CUtoME_port_sync   : in  bool;
         CUtoME_port_notify : out bool;
-        MEtoCU_port        : in  MEtoCU_IF;
+        MEtoCU_port        : in  MEtoCO_IF;
         MEtoCU_port_sync   : in  bool;
         MEtoCU_port_notify : out bool
     );
@@ -29,10 +29,10 @@ architecture Core_arch of Core is
             clk                : in  std_logic;
             rst                : in  std_logic;
 
-            CUtoME_port        : out CUtoME_IF;
+            CUtoME_port        : out COtoME_IF;
             CUtoME_port_sync   : in  bool;
             CUtoME_port_notify : out bool;
-            MEtoCU_port        : in  MEtoCU_IF;
+            MEtoCU_port        : in  MEtoCO_IF;
             MEtoCU_port_sync   : in  bool;
             MEtoCU_port_notify : out bool;
 

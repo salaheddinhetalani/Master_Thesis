@@ -18,8 +18,8 @@ public:
     SC_HAS_PROCESS(Core);
 
     // Ports (Memory Interface)
-    blocking_out<CUtoME_IF> COtoME_port;
-    blocking_in<MEtoCU_IF> MEtoCO_port;
+    blocking_out<COtoME_IF> COtoME_port;
+    blocking_in<MEtoCO_IF> MEtoCO_port;
 
     // Components
     Isa ISA;
