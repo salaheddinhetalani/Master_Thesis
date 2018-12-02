@@ -40,7 +40,6 @@ SCAM::FindDataFlow::FindDataFlow(clang::Stmt *stmt, Module *module, bool unsigne
 //    stmt->dump();
 //    llvm::errs() << "------------------------------\n";
     TraverseStmt(stmt);
-    stmt->dump();
 
 }
 
@@ -612,7 +611,6 @@ void SCAM::FindDataFlow::switchPassExpr(SCAM::Expr *expr) {
 }
 
 bool SCAM::FindDataFlow::exitVisitor(std::string msg, ErrorMsg::ErrorType errorType) {
-
     switch (errorType) {
         case ErrorMsg::ErrorType::error:
             ErrorMsg::getInstance().addErrorLog("-E- " + msg);

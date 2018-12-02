@@ -248,67 +248,67 @@ unsigned int Data_path::getRegContent(RF_RD_AccessType rdReq, unsigned int srcAd
         if (srcAddr == 0) {
             return 0;
         } else if (srcAddr == 1) {
-            return RFtoDP_data.reg_file_01;
+            return RFtoDP_data.reg_01;
         } else if (srcAddr == 2) {
-            return RFtoDP_data.reg_file_02;
+            return RFtoDP_data.reg_02;
         } else if (srcAddr == 3) {
-            return RFtoDP_data.reg_file_03;
+            return RFtoDP_data.reg_03;
         } else if (srcAddr == 4) {
-            return RFtoDP_data.reg_file_04;
+            return RFtoDP_data.reg_04;
         } else if (srcAddr == 5) {
-            return RFtoDP_data.reg_file_05;
+            return RFtoDP_data.reg_05;
         } else if (srcAddr == 6) {
-            return RFtoDP_data.reg_file_06;
+            return RFtoDP_data.reg_06;
         } else if (srcAddr == 7) {
-            return RFtoDP_data.reg_file_07;
+            return RFtoDP_data.reg_07;
         } else if (srcAddr == 8) {
-            return RFtoDP_data.reg_file_08;
+            return RFtoDP_data.reg_08;
         } else if (srcAddr == 9) {
-            return RFtoDP_data.reg_file_09;
+            return RFtoDP_data.reg_09;
         } else if (srcAddr == 10) {
-            return RFtoDP_data.reg_file_10;
+            return RFtoDP_data.reg_10;
         } else if (srcAddr == 11) {
-            return RFtoDP_data.reg_file_11;
+            return RFtoDP_data.reg_11;
         } else if (srcAddr == 12) {
-            return RFtoDP_data.reg_file_12;
+            return RFtoDP_data.reg_12;
         } else if (srcAddr == 13) {
-            return RFtoDP_data.reg_file_13;
+            return RFtoDP_data.reg_13;
         } else if (srcAddr == 14) {
-            return RFtoDP_data.reg_file_14;
+            return RFtoDP_data.reg_14;
         } else if (srcAddr == 15) {
-            return RFtoDP_data.reg_file_15;
+            return RFtoDP_data.reg_15;
         } else if (srcAddr == 16) {
-            return RFtoDP_data.reg_file_16;
+            return RFtoDP_data.reg_16;
         } else if (srcAddr == 17) {
-            return RFtoDP_data.reg_file_17;
+            return RFtoDP_data.reg_17;
         } else if (srcAddr == 18) {
-            return RFtoDP_data.reg_file_18;
+            return RFtoDP_data.reg_18;
         } else if (srcAddr == 19) {
-            return RFtoDP_data.reg_file_19;
+            return RFtoDP_data.reg_19;
         } else if (srcAddr == 20) {
-            return RFtoDP_data.reg_file_20;
+            return RFtoDP_data.reg_20;
         } else if (srcAddr == 21) {
-            return RFtoDP_data.reg_file_21;
+            return RFtoDP_data.reg_21;
         } else if (srcAddr == 22) {
-            return RFtoDP_data.reg_file_22;
+            return RFtoDP_data.reg_22;
         } else if (srcAddr == 23) {
-            return RFtoDP_data.reg_file_23;
+            return RFtoDP_data.reg_23;
         } else if (srcAddr == 24) {
-            return RFtoDP_data.reg_file_24;
+            return RFtoDP_data.reg_24;
         } else if (srcAddr == 25) {
-            return RFtoDP_data.reg_file_25;
+            return RFtoDP_data.reg_25;
         } else if (srcAddr == 26) {
-            return RFtoDP_data.reg_file_26;
+            return RFtoDP_data.reg_26;
         } else if (srcAddr == 27) {
-            return RFtoDP_data.reg_file_27;
+            return RFtoDP_data.reg_27;
         } else if (srcAddr == 28) {
-            return RFtoDP_data.reg_file_28;
+            return RFtoDP_data.reg_28;
         } else if (srcAddr == 29) {
-            return RFtoDP_data.reg_file_29;
+            return RFtoDP_data.reg_29;
         } else if (srcAddr == 30) {
-            return RFtoDP_data.reg_file_30;
+            return RFtoDP_data.reg_30;
         } else {
-            return RFtoDP_data.reg_file_31;
+            return RFtoDP_data.reg_31;
         }
 
     } else {

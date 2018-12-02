@@ -11,20 +11,10 @@ SCAM::FindVariables::FindVariables(clang::CXXRecordDecl* recordDecl):
         recordDecl(recordDecl) {
     //Find Members
     TraverseDecl(recordDecl);
-    throw std::runtime_error("HERE");
 }
 
 
 bool SCAM::FindVariables::VisitFieldDecl(clang::FieldDecl *fieldDecl) {
-    fieldDecl->dump();
-
-
-    if(fieldDecl->getType()->isConstantArrayType()){
-        const clang::ConstantArrayType*  constantArrayType = clang::cast<clang::ConstantArrayType>(fieldDecl->getType().getTypePtr());
-        //clang::ConstantArrayType * test = new clang::ConstantArrayType()
-        std::cout << constantArrayType->getSize().getSExtValue() << std::endl;
-
-    }
     //If field is builtin-> add else make sure its tracked such that we don't miss any values
     if (fieldDecl->getType()->isBuiltinType()) {
         this->memberMap.insert(std::make_pair(fieldDecl->getName(), fieldDecl));
@@ -51,13 +41,8 @@ bool SCAM::FindVariables::VisitFieldDecl(clang::FieldDecl *fieldDecl) {
         //Add all enumValues
 
         this->memberTypeMap.insert(std::make_pair(fieldDecl->getName(), typeName));
-    } else if(fieldDecl->getType()->isConstantArrayType()){
-
-        const clang::ConstantArrayType*  constantArrayType = clang::cast<clang::ConstantArrayType>(fieldDecl->getType().getTypePtr());
-        std::cout << constantArrayType->getSize().getSExtValue() << std::endl;
     }
     else{
-
         //TODO: is every fieldDecl catched? -> maybe first store all in a list in work off that list afterwards
     }
     return true;

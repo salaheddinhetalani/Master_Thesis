@@ -19,8 +19,8 @@
  * ##################
  * ADD YOUR CORE IMPLEMENTATION HERE
  */
-//#include "../../RISCV_ISA/ESL/Core.h"
-#include "../../RISCV_Pipelined/ESL/Core.h"
+#include "../../RISCV_ISA/ESL/Core.h"
+//#include "../../RISCV_Pipelined/ESL/Core.h"
 
 // TLM = 1 -> using TLM bridge and TLM memory
 // TLM = 0 -> SCAM interface only
@@ -143,37 +143,37 @@ void Core_test::perform_test() {
     // used for testing
     unsigned int reg_file[32] = {
             0,
-            CO.RF.reg_file_01,
-            CO.RF.reg_file_02,
-            CO.RF.reg_file_03,
-            CO.RF.reg_file_04,
-            CO.RF.reg_file_05,
-            CO.RF.reg_file_06,
-            CO.RF.reg_file_07,
-            CO.RF.reg_file_08,
-            CO.RF.reg_file_09,
-            CO.RF.reg_file_10,
-            CO.RF.reg_file_11,
-            CO.RF.reg_file_12,
-            CO.RF.reg_file_13,
-            CO.RF.reg_file_14,
-            CO.RF.reg_file_15,
-            CO.RF.reg_file_16,
-            CO.RF.reg_file_17,
-            CO.RF.reg_file_18,
-            CO.RF.reg_file_19,
-            CO.RF.reg_file_20,
-            CO.RF.reg_file_21,
-            CO.RF.reg_file_22,
-            CO.RF.reg_file_23,
-            CO.RF.reg_file_24,
-            CO.RF.reg_file_25,
-            CO.RF.reg_file_26,
-            CO.RF.reg_file_27,
-            CO.RF.reg_file_28,
-            CO.RF.reg_file_29,
-            CO.RF.reg_file_30,
-            CO.RF.reg_file_31
+            CO.RF.reg_01,
+            CO.RF.reg_02,
+            CO.RF.reg_03,
+            CO.RF.reg_04,
+            CO.RF.reg_05,
+            CO.RF.reg_06,
+            CO.RF.reg_07,
+            CO.RF.reg_08,
+            CO.RF.reg_09,
+            CO.RF.reg_10,
+            CO.RF.reg_11,
+            CO.RF.reg_12,
+            CO.RF.reg_13,
+            CO.RF.reg_14,
+            CO.RF.reg_15,
+            CO.RF.reg_16,
+            CO.RF.reg_17,
+            CO.RF.reg_18,
+            CO.RF.reg_19,
+            CO.RF.reg_20,
+            CO.RF.reg_21,
+            CO.RF.reg_22,
+            CO.RF.reg_23,
+            CO.RF.reg_24,
+            CO.RF.reg_25,
+            CO.RF.reg_26,
+            CO.RF.reg_27,
+            CO.RF.reg_28,
+            CO.RF.reg_29,
+            CO.RF.reg_30,
+            CO.RF.reg_31
     };
 
     //////////////////// Programs ///////////////////////

@@ -1,7 +1,3 @@
-//
-// Created by salaheddin hetalani (salaheddinhetalani@gmail.com) on 31 Mar, 2018
-//
-
 #ifndef PROJECT_REGISTER_FILE_H
 #define PROJECT_REGISTER_FILE_H
 
@@ -14,11 +10,12 @@
 class Register_file : public sc_module {
 public:
 
+    //Constructor
     SC_HAS_PROCESS(Register_file);
 
     Register_file(sc_module_name name) :
-            DPtoRF_port("DPtoRF_port"),
-            RFtoDP_port("RFtoDP_port"),
+            toRegfilePort("regfileInPort"),
+            fromRegfilePort("regfileOutPort"),
             reg_01(0),
             reg_02(0),
             reg_03(0),
@@ -55,11 +52,11 @@ public:
         SC_THREAD(run);
     }
 
-    slave_in<DPtoRF_IF> DPtoRF_port;
-    slave_out<RFtoDP_IF> RFtoDP_port;
+    slave_in<RegfileWriteType> toRegfilePort;
+    slave_out<RegfileType> fromRegfilePort;
 
-    DPtoRF_IF DPtoRF_data;
-    RFtoDP_IF RFtoDP_data;
+    RegfileWriteType regfileWrite;
+    RegfileType regfile; // RegisterFile
 
     // register file data
     unsigned int reg_01;
@@ -106,113 +103,115 @@ void Register_file::run() {
 
     while (true) {
 
-        RFtoDP_data.reg_01 = reg_01;
-        RFtoDP_data.reg_02 = reg_02;
-        RFtoDP_data.reg_03 = reg_03;
-        RFtoDP_data.reg_04 = reg_04;
-        RFtoDP_data.reg_05 = reg_05;
-        RFtoDP_data.reg_06 = reg_06;
-        RFtoDP_data.reg_07 = reg_07;
-        RFtoDP_data.reg_08 = reg_08;
-        RFtoDP_data.reg_09 = reg_09;
-        RFtoDP_data.reg_10 = reg_10;
-        RFtoDP_data.reg_11 = reg_11;
-        RFtoDP_data.reg_12 = reg_12;
-        RFtoDP_data.reg_13 = reg_13;
-        RFtoDP_data.reg_14 = reg_14;
-        RFtoDP_data.reg_15 = reg_15;
-        RFtoDP_data.reg_16 = reg_16;
-        RFtoDP_data.reg_17 = reg_17;
-        RFtoDP_data.reg_18 = reg_18;
-        RFtoDP_data.reg_19 = reg_19;
-        RFtoDP_data.reg_20 = reg_20;
-        RFtoDP_data.reg_21 = reg_21;
-        RFtoDP_data.reg_22 = reg_22;
-        RFtoDP_data.reg_23 = reg_23;
-        RFtoDP_data.reg_24 = reg_24;
-        RFtoDP_data.reg_25 = reg_25;
-        RFtoDP_data.reg_26 = reg_26;
-        RFtoDP_data.reg_27 = reg_27;
-        RFtoDP_data.reg_28 = reg_28;
-        RFtoDP_data.reg_29 = reg_29;
-        RFtoDP_data.reg_30 = reg_30;
-        RFtoDP_data.reg_31 = reg_31;
+        // return current data
+        regfile.reg_01 = reg_01;
+        regfile.reg_02 = reg_02;
+        regfile.reg_03 = reg_03;
+        regfile.reg_04 = reg_04;
+        regfile.reg_05 = reg_05;
+        regfile.reg_06 = reg_06;
+        regfile.reg_07 = reg_07;
+        regfile.reg_08 = reg_08;
+        regfile.reg_09 = reg_09;
+        regfile.reg_10 = reg_10;
+        regfile.reg_11 = reg_11;
+        regfile.reg_12 = reg_12;
+        regfile.reg_13 = reg_13;
+        regfile.reg_14 = reg_14;
+        regfile.reg_15 = reg_15;
+        regfile.reg_16 = reg_16;
+        regfile.reg_17 = reg_17;
+        regfile.reg_18 = reg_18;
+        regfile.reg_19 = reg_19;
+        regfile.reg_20 = reg_20;
+        regfile.reg_21 = reg_21;
+        regfile.reg_22 = reg_22;
+        regfile.reg_23 = reg_23;
+        regfile.reg_24 = reg_24;
+        regfile.reg_25 = reg_25;
+        regfile.reg_26 = reg_26;
+        regfile.reg_27 = reg_27;
+        regfile.reg_28 = reg_28;
+        regfile.reg_29 = reg_29;
+        regfile.reg_30 = reg_30;
+        regfile.reg_31 = reg_31;
 
-        RFtoDP_port->nb_write(RFtoDP_data);
+        fromRegfilePort->nb_write(regfile);
 
-        rec = DPtoRF_port->nb_read(DPtoRF_data);
+        rec = toRegfilePort->nb_read(regfileWrite); // read request
 
         if (rec) {
 
-            if (DPtoRF_data.wrReq == RF_WR && DPtoRF_data.dst != 0) {
+            if (regfileWrite.dst != 0) {
 
-                if (DPtoRF_data.dst == 1) {
-                    reg_01 = DPtoRF_data.dstData;
-                } else if (DPtoRF_data.dst == 2) {
-                    reg_02 = DPtoRF_data.dstData;
-                } else if (DPtoRF_data.dst == 3) {
-                    reg_03 = DPtoRF_data.dstData;
-                } else if (DPtoRF_data.dst == 4) {
-                    reg_04 = DPtoRF_data.dstData;
-                } else if (DPtoRF_data.dst == 5) {
-                    reg_05 = DPtoRF_data.dstData;
-                } else if (DPtoRF_data.dst == 6) {
-                    reg_06 = DPtoRF_data.dstData;
-                } else if (DPtoRF_data.dst == 7) {
-                    reg_07 = DPtoRF_data.dstData;
-                } else if (DPtoRF_data.dst == 8) {
-                    reg_08 = DPtoRF_data.dstData;
-                } else if (DPtoRF_data.dst == 9) {
-                    reg_09 = DPtoRF_data.dstData;
-                } else if (DPtoRF_data.dst == 10) {
-                    reg_10 = DPtoRF_data.dstData;
-                } else if (DPtoRF_data.dst == 11) {
-                    reg_11 = DPtoRF_data.dstData;
-                } else if (DPtoRF_data.dst == 12) {
-                    reg_12 = DPtoRF_data.dstData;
-                } else if (DPtoRF_data.dst == 13) {
-                    reg_13 = DPtoRF_data.dstData;
-                } else if (DPtoRF_data.dst == 14) {
-                    reg_14 = DPtoRF_data.dstData;
-                } else if (DPtoRF_data.dst == 15) {
-                    reg_15 = DPtoRF_data.dstData;
-                } else if (DPtoRF_data.dst == 16) {
-                    reg_16 = DPtoRF_data.dstData;
-                } else if (DPtoRF_data.dst == 17) {
-                    reg_17 = DPtoRF_data.dstData;
-                } else if (DPtoRF_data.dst == 18) {
-                    reg_18 = DPtoRF_data.dstData;
-                } else if (DPtoRF_data.dst == 19) {
-                    reg_19 = DPtoRF_data.dstData;
-                } else if (DPtoRF_data.dst == 20) {
-                    reg_20 = DPtoRF_data.dstData;
-                } else if (DPtoRF_data.dst == 21) {
-                    reg_21 = DPtoRF_data.dstData;
-                } else if (DPtoRF_data.dst == 22) {
-                    reg_22 = DPtoRF_data.dstData;
-                } else if (DPtoRF_data.dst == 23) {
-                    reg_23 = DPtoRF_data.dstData;
-                } else if (DPtoRF_data.dst == 24) {
-                    reg_24 = DPtoRF_data.dstData;
-                } else if (DPtoRF_data.dst == 25) {
-                    reg_25 = DPtoRF_data.dstData;
-                } else if (DPtoRF_data.dst == 26) {
-                    reg_26 = DPtoRF_data.dstData;
-                } else if (DPtoRF_data.dst == 27) {
-                    reg_27 = DPtoRF_data.dstData;
-                } else if (DPtoRF_data.dst == 28) {
-                    reg_28 = DPtoRF_data.dstData;
-                } else if (DPtoRF_data.dst == 29) {
-                    reg_29 = DPtoRF_data.dstData;
-                } else if (DPtoRF_data.dst == 30) {
-                    reg_30 = DPtoRF_data.dstData;
+                // write to regfile
+                if (regfileWrite.dst == 1) {
+                    reg_01 = regfileWrite.dstData;
+                } else if (regfileWrite.dst == 2) {
+                    reg_02 = regfileWrite.dstData;
+                } else if (regfileWrite.dst == 3) {
+                    reg_03 = regfileWrite.dstData;
+                } else if (regfileWrite.dst == 4) {
+                    reg_04 = regfileWrite.dstData;
+                } else if (regfileWrite.dst == 5) {
+                    reg_05 = regfileWrite.dstData;
+                } else if (regfileWrite.dst == 6) {
+                    reg_06 = regfileWrite.dstData;
+                } else if (regfileWrite.dst == 7) {
+                    reg_07 = regfileWrite.dstData;
+                } else if (regfileWrite.dst == 8) {
+                    reg_08 = regfileWrite.dstData;
+                } else if (regfileWrite.dst == 9) {
+                    reg_09 = regfileWrite.dstData;
+                } else if (regfileWrite.dst == 10) {
+                    reg_10 = regfileWrite.dstData;
+                } else if (regfileWrite.dst == 11) {
+                    reg_11 = regfileWrite.dstData;
+                } else if (regfileWrite.dst == 12) {
+                    reg_12 = regfileWrite.dstData;
+                } else if (regfileWrite.dst == 13) {
+                    reg_13 = regfileWrite.dstData;
+                } else if (regfileWrite.dst == 14) {
+                    reg_14 = regfileWrite.dstData;
+                } else if (regfileWrite.dst == 15) {
+                    reg_15 = regfileWrite.dstData;
+                } else if (regfileWrite.dst == 16) {
+                    reg_16 = regfileWrite.dstData;
+                } else if (regfileWrite.dst == 17) {
+                    reg_17 = regfileWrite.dstData;
+                } else if (regfileWrite.dst == 18) {
+                    reg_18 = regfileWrite.dstData;
+                } else if (regfileWrite.dst == 19) {
+                    reg_19 = regfileWrite.dstData;
+                } else if (regfileWrite.dst == 20) {
+                    reg_20 = regfileWrite.dstData;
+                } else if (regfileWrite.dst == 21) {
+                    reg_21 = regfileWrite.dstData;
+                } else if (regfileWrite.dst == 22) {
+                    reg_22 = regfileWrite.dstData;
+                } else if (regfileWrite.dst == 23) {
+                    reg_23 = regfileWrite.dstData;
+                } else if (regfileWrite.dst == 24) {
+                    reg_24 = regfileWrite.dstData;
+                } else if (regfileWrite.dst == 25) {
+                    reg_25 = regfileWrite.dstData;
+                } else if (regfileWrite.dst == 26) {
+                    reg_26 = regfileWrite.dstData;
+                } else if (regfileWrite.dst == 27) {
+                    reg_27 = regfileWrite.dstData;
+                } else if (regfileWrite.dst == 28) {
+                    reg_28 = regfileWrite.dstData;
+                } else if (regfileWrite.dst == 29) {
+                    reg_29 = regfileWrite.dstData;
+                } else if (regfileWrite.dst == 30) {
+                    reg_30 = regfileWrite.dstData;
                 } else {
-                    reg_31 = DPtoRF_data.dstData;
+                    reg_31 = regfileWrite.dstData;
                 }
 
 #ifdef LOGTOFILE
-                cout << "S5: @RF: Writing to register x" << dec << DPtoRF_data.dst << " = 0x" << hex
-                     << DPtoRF_data.dstData << "(hex) = " << dec << DPtoRF_data.dstData << "(dec)" << endl;
+                cout << "S5: @RF: Writing to register x" << dec << regfileWrite.dst << " = 0x" << hex
+                 << regfileWrite.dstData << " = " << dec << regfileWrite.dstData << "(dec)" << endl;
                 log();  // print regfile
 #endif
             }
@@ -336,7 +335,7 @@ void Register_file::log() {
         if (i == 7 || i == 15 || i == 23 || i == 31) {
             cout << left  << s.str();
         } else {
-            cout << left << std::setw(18) << s.str();
+            cout << left << setw(18) << s.str();
         }
 
         s.str("");

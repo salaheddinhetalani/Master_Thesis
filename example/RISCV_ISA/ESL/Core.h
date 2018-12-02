@@ -2,15 +2,15 @@
 // Created by paulius on 06.14.18.
 //
 
-#ifndef RISCV_CORE_H_
-#define RISCV_CORE_H_
+#ifndef PROJECT_CORE_H
+#define PROJECT_CORE_H
 
 
 #include "systemc.h"
 #include "Interfaces.h"
 #include "CPU_Interfaces.h"
 #include "ISA.h"
-#include "regs.h"
+#include "Register_file.h"
 
 class Core : public sc_module {
 public:
@@ -22,31 +22,31 @@ public:
     blocking_in<MEtoCU_IF> MEtoCO_port;
 
     // Components
-    ISA isa;
-    Regs RF;
+    Isa ISA;
+    Register_file RF;
 
-    MasterSlave<RegfileWriteType> toRegsChannel;
-    MasterSlave<RegfileType> fromRegsChannel;
+    MasterSlave<RegfileWriteType> toRegfileChannel;
+    MasterSlave<RegfileType> fromRegfileChannel;
 
     Core(sc_module_name name) :
-            isa("isa"),
+            ISA("ISA"),
             RF("RF"),
-            toRegsChannel("toRegsChannel"),
-            fromRegsChannel("fromRegsChannel"),
+            toRegfileChannel("toRegfileChannel"),
+            fromRegfileChannel("fromRegfileChannel"),
             COtoME_port("coreOutPort"),
             MEtoCO_port("coreInPort")
     {
 
         // Module port binding:
-        isa.fromRegsPort(fromRegsChannel);
-        RF.fromRegsPort(fromRegsChannel);
-        isa.toRegsPort(toRegsChannel);
-        RF.toRegsPort(toRegsChannel);
+        ISA.fromRegfilePort(fromRegfileChannel);
+        RF.fromRegfilePort(fromRegfileChannel);
+        ISA.toRegfilePort(toRegfileChannel);
+        RF.toRegfilePort(toRegfileChannel);
 
         // Memory interface forwarded to outside
-        isa.toMemoryPort(COtoME_port);
-        isa.fromMemoryPort(MEtoCO_port);
+        ISA.toMemoryPort(COtoME_port);
+        ISA.fromMemoryPort(MEtoCO_port);
     }
 };
 
-#endif //RISCV_CORE_H_
+#endif //PROJECT_CORE_H
