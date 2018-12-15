@@ -26,10 +26,10 @@
 // TLM = 0 -> SCAM interface only
 #define TLM 0
 
-class Core_test {
+class ISS {
 public:
 
-    Core_test(string hex_file_path, string assembly_file_path, string log_file_path) {
+    ISS(string hex_file_path, string assembly_file_path, string log_file_path) {
         this->hex_file_path = hex_file_path;
         this->assembly_file_path = assembly_file_path;
         this->log_file_path = log_file_path;
@@ -45,7 +45,7 @@ private:
 };
 
 
-void Core_test::perform_test() {
+void ISS::perform_test() {
 
     ifstream hex_file;
     ifstream assembly_file;

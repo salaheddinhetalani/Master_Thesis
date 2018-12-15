@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include "Core_test.h"
+#include "ISS.h"
 
 
 int sc_main(int argc, char *argv[]) {
@@ -21,7 +21,7 @@ int sc_main(int argc, char *argv[]) {
                log_file_path = log_file_path.substr(0, log_file_path.find_last_of('/'));
                log_file_path = log_file_path + "/Logfiles/" + file_name + ".lg";
 
-        Core_test *test_object = new Core_test(string(argv[1]), string(assembly_file_path), string(log_file_path));
+        ISS *test_object = new ISS(string(argv[1]), string(assembly_file_path), string(log_file_path));
         test_object->perform_test(); // Run regression tests
         return 0;
 

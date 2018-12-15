@@ -30,7 +30,7 @@ begin
 
     begin
 
-        if (DPtoRF_port.rdReq = RF_RD)  then
+        if (DPtoRF_port.rdReq = RF_RD) then
 
             -- READ REGISTER 1
             if (DPtoRF_port.src1 = 0) then

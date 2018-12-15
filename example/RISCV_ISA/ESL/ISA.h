@@ -43,7 +43,7 @@ public:
 
     // data for communication with memory
     COtoME_IF memoryAccess;
-    MEtoCO_IF fromMemoryData;
+    MEtoCO_IF memoryData;
 
     // data for communication with register file
     RegfileWriteType regfileWrite;
@@ -58,38 +58,27 @@ public:
 
     // Other control signals:
     unsigned int encodedInstr;
-
     unsigned int aluOp1;
     unsigned int aluOp2;
     unsigned int aluResult;
-
     unsigned int pcReg;
 
-    void run(); // thread
-
     EncType getEncType(unsigned int encodedInstr) const;
-
     InstrType getInstrType(unsigned int encodedInstr) const;
-
     unsigned int getRs1Addr(unsigned int encodedInstr) const;
-
     unsigned int getRs2Addr(unsigned int encodedInstr) const;
-
     unsigned int getRdAddr(unsigned int encodedInstr) const;
-
     unsigned int getImmediate(unsigned int encodedInstr) const;
 
     ALUfuncType getALUfunc(InstrType instr) const;
-
     ME_MaskType getMemoryMask(InstrType instr) const;
 
     unsigned int getRegContent(unsigned int src, RegfileType regfile) const;
-
     unsigned int getALUresult(ALUfuncType aluFunction, unsigned int operand1, unsigned int operand2) const;
-
     unsigned int getPCvalue_ENC_B(unsigned int encodedInstr, unsigned int aluResult, unsigned int pcReg) const;
-
     unsigned int getALUresult_ENC_U(unsigned int encodedInstr, unsigned int pcReg) const;
+
+    void run(); // thread
 };
 
 
@@ -104,17 +93,17 @@ void Isa::run() {
             memoryAccess.req = ME_RD;
             memoryAccess.mask = MT_W; // always for instructions
             memoryAccess.addrIn = pcReg;
-            memoryAccess.dataIn = 0;    // not relevant
+            memoryAccess.dataIn = 0; // not relevant
             
             toMemoryPort->write(memoryAccess); //Send request to memory
             
-            fromMemoryPort->read(fromMemoryData); //Read encoded instruction from memory
+            fromMemoryPort->read(memoryData); //Read encoded instruction from memory
             
-            encodedInstr = fromMemoryData.loadedData;
+            encodedInstr = memoryData.loadedData;
 
 #if SCAM == 0
             // Terminate if: Addi $0,$0,0 (NOP) is read. Just for debug
-            if (fromMemoryData.loadedData == 0x13) {
+            if (memoryData.loadedData == 0x13) {
                 sc_stop();
                 wait(SC_ZERO_TIME);
             }
@@ -135,89 +124,79 @@ void Isa::run() {
                 /////////////////////////////////////////////////////////////////////////////
                 //|  ID (RF_READ)   |        EX       |    ---------    |  WB (RF_WRITE)  |//
                 /////////////////////////////////////////////////////////////////////////////
-
-                fromRegfilePort->read(regfile); //Read register contents
-
-                //Set-up operands for alu by reading from regfile
+                // Read register file
+                fromRegfilePort->read(regfile);
+                // Set-up ALU operands
                 aluOp1 = getRegContent(getRs1Addr(encodedInstr), regfile);
                 aluOp2 = getRegContent(getRs2Addr(encodedInstr), regfile);
-
-                aluResult = getALUresult(getALUfunc(getInstrType(encodedInstr)), aluOp1, aluOp2); //Compute result
-
+                // Compute ALU result
+                aluResult = getALUresult(getALUfunc(getInstrType(encodedInstr)), aluOp1, aluOp2);
 #ifdef LOGTOFILE
                 cout << "S3: @AL: Result = 0x" << hex << aluResult << "(hex) = " << dec << aluResult << "(dec)" << endl;
 #endif
-                //Set up write back
+                // Set-up write back data
                 regfileWrite.dst = getRdAddr(encodedInstr);
                 regfileWrite.dstData = aluResult;
-
-                toRegfilePort->write(regfileWrite); //Perform write back
-
-                //Set-up PC
+                // Perform write back
+                toRegfilePort->write(regfileWrite);
+                // Set-up PC
                 pcReg = pcReg + 4;
 
             } else if (getEncType(encodedInstr) == ENC_B) {
                 /////////////////////////////////////////////////////////////////////////////
                 //|  ID (RF_READ)   |        EX       |    ---------    |    ---------    |//
                 /////////////////////////////////////////////////////////////////////////////
-
-                fromRegfilePort->read(regfile); //Read register contents
-
-                //Set-up operands for alu by reading from regfile
+                // Read register file
+                fromRegfilePort->read(regfile);
+                // Set-up ALU operands
                 aluOp1 = getRegContent(getRs1Addr(encodedInstr), regfile);
                 aluOp2 = getRegContent(getRs2Addr(encodedInstr), regfile);
-
-                aluResult = getALUresult(getALUfunc(getInstrType(encodedInstr)), aluOp1, aluOp2); //Compute result
-
+                // Compute ALU result
+                aluResult = getALUresult(getALUfunc(getInstrType(encodedInstr)), aluOp1, aluOp2);
 #ifdef LOGTOFILE
                 cout << "S3: @AL: Result = 0x" << hex << aluResult << "(hex) = " << dec << aluResult << "(dec)" << endl;
 #endif
-                //Set-up PC
+                // Set-up PC
                 pcReg = getPCvalue_ENC_B(encodedInstr, aluResult, pcReg);
 
             } else if (getEncType(encodedInstr) == ENC_S) {
                 /////////////////////////////////////////////////////////////////////////////
                 //|  ID (RF_READ)   |        EX       |       MEM       |    ---------    |//
                 /////////////////////////////////////////////////////////////////////////////
-
-                fromRegfilePort->read(regfile); //Read register contents
-
-                //Set-up operands for alu by reading from regfile
+                // Read register file
+                fromRegfilePort->read(regfile);
+                // Set-up ALU operands
                 aluOp1 = getRegContent(getRs1Addr(encodedInstr), regfile);
                 aluOp2 = getImmediate(encodedInstr);
-
-                aluResult = getALUresult(ALU_ADD, aluOp1, aluOp2); //Compute result
-
+                // Compute ALU result
+                aluResult = getALUresult(ALU_ADD, aluOp1, aluOp2);
 #ifdef LOGTOFILE
                 cout << "S3: @AL: Result = 0x" << hex << aluResult << "(hex) = " << dec << aluResult << "(dec)" << endl;
 #endif
-                //prepare memory access
+                // Set-up store memory access
                 memoryAccess.req = ME_WR;
-                memoryAccess.mask = getMemoryMask(getInstrType(encodedInstr)); // set memory access mask
-                memoryAccess.addrIn = aluResult; // Set address (getALUresult result) for stores
-                memoryAccess.dataIn = getRegContent(getRs2Addr(encodedInstr), regfile); // Set data for stores, rs2 = source for store
-
-                toMemoryPort->write(memoryAccess); // Request store
-
+                memoryAccess.mask = getMemoryMask(getInstrType(encodedInstr)); // set  mask
+                memoryAccess.addrIn = aluResult; // Set address (aluResult)
+                memoryAccess.dataIn = getRegContent(getRs2Addr(encodedInstr), regfile); // Set data, rs2 = source for store
+                // Request store
+                toMemoryPort->write(memoryAccess);
                 // Store done
-                fromMemoryPort->read(fromMemoryData); //Fixme: Why do we need this read? For store a write should be sufficient
-
-                //Set-up PC
+                fromMemoryPort->read(memoryData);
+                // Set-up PC
                 pcReg = pcReg + 4;
 
             } else if (getEncType(encodedInstr) == ENC_U) {
                 /////////////////////////////////////////////////////////////////////////////
                 //|        ID       |        EX       |    ---------    |  WB (RF_WRITE)  |//
                 /////////////////////////////////////////////////////////////////////////////
-
 #ifdef LOGTOFILE
                 cout << "S3: @AL: Result = 0x" << hex << getALUresult_ENC_U(encodedInstr, pcReg) << "(hex) = " << dec << getALUresult_ENC_U(encodedInstr, pcReg) << "(dec)" << endl;
 #endif
-                regfileWrite.dst = getRdAddr(encodedInstr); //Compute destination
+                // Set-up write back data
+                regfileWrite.dst = getRdAddr(encodedInstr);
                 regfileWrite.dstData = getALUresult_ENC_U(encodedInstr, pcReg);
-
-                toRegfilePort->write(regfileWrite); //Perform write back
-
+                // Perform write back
+                toRegfilePort->write(regfileWrite);
                 //Set-up PC
                 pcReg = pcReg + 4;
 
@@ -225,101 +204,86 @@ void Isa::run() {
                 /////////////////////////////////////////////////////////////////////////////
                 //|        ID       |    ---------    |    ---------    |  WB (RF_WRITE)  |//
                 /////////////////////////////////////////////////////////////////////////////
-
-                //Set up write back
+                // Set-up write back data
                 regfileWrite.dst = getRdAddr(encodedInstr);
-                regfileWrite.dstData = pcReg + 4; //Compute result
-
-                toRegfilePort->write(regfileWrite); //Perform write back
-
-                //Set-up PC
+                regfileWrite.dstData = pcReg + 4;
+                // Perform write back
+                toRegfilePort->write(regfileWrite);
+                // Set-up PC
                 pcReg = pcReg + getImmediate(encodedInstr);
 
             } else if (getEncType(encodedInstr) == ENC_I_I) {
                 /////////////////////////////////////////////////////////////////////////////
                 //|  ID (RF_READ)   |        EX       |    ---------    |  WB (RF_WRITE)  |//
                 /////////////////////////////////////////////////////////////////////////////
-
-                fromRegfilePort->read(regfile); //Read register contents
-
-                //Set-up operands for alu by reading from regfile
+                // Read register file
+                fromRegfilePort->read(regfile);
+                // Set-up ALU operands
                 aluOp1 = getRegContent(getRs1Addr(encodedInstr), regfile);
                 aluOp2 = getImmediate(encodedInstr);
-
+                // Compute ALU result
                 aluResult = getALUresult(getALUfunc(getInstrType(encodedInstr)), aluOp1, aluOp2);
-
 #ifdef LOGTOFILE
                 cout << "S3: @AL: Result = 0x" << hex << aluResult << "(hex) = " << dec << aluResult << "(dec)" << endl;
 #endif
-                //Set up write back
+                // Set-up write back data
                 regfileWrite.dst = getRdAddr(encodedInstr);
-                regfileWrite.dstData = aluResult; //Compute result
-
-                toRegfilePort->write(regfileWrite); //Perform write back
-
-                //Set-up PC
+                regfileWrite.dstData = aluResult;
+                // Perform write back
+                toRegfilePort->write(regfileWrite);
+                // Set-up PC
                 pcReg = pcReg + 4;
 
             } else if (getEncType(encodedInstr) == ENC_I_L) {
                 /////////////////////////////////////////////////////////////////////////////
                 //|  ID (RF_READ)   |        EX       |       MEM       |  WB (RF_WRITE)  |//
                 /////////////////////////////////////////////////////////////////////////////
-
-                fromRegfilePort->read(regfile); //Read register contents
-
-                //Set-up operands for alu by reading from regfile
+                // Read register file
+                fromRegfilePort->read(regfile);
+                // Set-up ALU operands
                 aluOp1 = getRegContent(getRs1Addr(encodedInstr), regfile);
                 aluOp2 = getImmediate(encodedInstr);
-
+                // Compute ALU result
                 aluResult = getALUresult(ALU_ADD, aluOp1, aluOp2);
-
 #ifdef LOGTOFILE
                 cout << "S3: @AL: Result = 0x" << hex << aluResult << "(hex) = " << dec << aluResult << "(dec)" << endl;
 #endif
-                //prepare memory access
+                // Set-up load memory access
                 memoryAccess.req = ME_RD;
-                memoryAccess.mask = getMemoryMask(getInstrType(encodedInstr)); // set memory access mask
-                memoryAccess.addrIn = aluResult; // Set address (getALUresult result) for loads
-                memoryAccess.dataIn = 0; // (not relevant for loads)
-
+                memoryAccess.mask = getMemoryMask(getInstrType(encodedInstr)); // set mask
+                memoryAccess.addrIn = aluResult; // Set address (aluResult)
+                memoryAccess.dataIn = 0; // (not relevant for load)
+                // Set-up write back data
                 regfileWrite.dst = getRdAddr(encodedInstr);
-
                 // Request load
                 toMemoryPort->write(memoryAccess);
-
                 // Load done
-                fromMemoryPort->read(fromMemoryData);
-
-                //Set up write back
-                regfileWrite.dstData = fromMemoryData.loadedData;
-
-                //Perform write back
+                fromMemoryPort->read(memoryData);
+                // Set-up write back data
+                regfileWrite.dstData = memoryData.loadedData;
+                // Perform write back
                 toRegfilePort->write(regfileWrite);
-
-                //Set-up PC
+                // Set-up PC
                 pcReg = pcReg + 4;
 
             } else if (getEncType(encodedInstr) == ENC_I_J) {
                 /////////////////////////////////////////////////////////////////////////////
                 //|  ID (RF_READ)   |    ---------    |    ---------    |  WB (RF_WRITE)  |//
                 /////////////////////////////////////////////////////////////////////////////
-
-                fromRegfilePort->read(regfile); //Read register contents
-
-                //Set up write back
+                // Read register file
+                fromRegfilePort->read(regfile);
+                // Set-up write back data
                 regfileWrite.dst = getRdAddr(encodedInstr);
-                regfileWrite.dstData = pcReg + 4; //Compute result
-
-                //Perform write back
+                regfileWrite.dstData = pcReg + 4;
+                // Perform write back
                 toRegfilePort->write(regfileWrite);
-
-                //Set-up PC
+                // Set-up PC
                 pcReg = getRegContent(getRs1Addr(encodedInstr), regfile) + getImmediate(encodedInstr);
 
             } else {
 
 #if SCAM == 0
-                // Terminate if Unknown instr
+                // Terminate if Unknown instruction
                 if (getInstrType(encodedInstr) == InstrType::INSTR_UNKNOWN) {
                     std::cout << "Unknown INST" << std::endl;
                     sc_stop();
@@ -328,10 +292,10 @@ void Isa::run() {
 #endif
             }
 
-            nextsection = Sections::fetch; // Fetch next instruction
+            nextsection = Sections::fetch;
         }
 
-        section = nextsection; // Set next section
+        section = nextsection;
     }
 }
 

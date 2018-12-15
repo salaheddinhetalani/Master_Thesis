@@ -17,6 +17,7 @@
 // 1 : Properties can be generated
 #define SCAM 0
 
+
 class Control_unit : public sc_module {
 public:
 
@@ -97,7 +98,10 @@ public:
     bool prevJalrInstr;
     bool currBranchTaken;
 
-    void run(); // thread
+#ifdef LOGTOFILE
+    InstrType instrType_prev2;
+    InstrType instrType_prev3;
+#endif
 
     PC_SelType          getPCsel(unsigned int encodedInstr) const;
     unsigned int        getImmS2(unsigned int encodedInstr) const;
@@ -110,7 +114,7 @@ public:
     ALUfuncType         getALUfunc(unsigned int encodedInstr) const;
     AL_OperandSelType   getALUop1Sel(unsigned int encodedInstr) const;
     AL_OperandSelType   getALUop2Sel(unsigned int encodedInstr) const;
-    unsigned int        getImmS5(unsigned int encodedInstr) const;
+    unsigned int        getImmS3(unsigned int encodedInstr) const;
     ME_AccessType       getDmemReq(unsigned int encodedInstr) const;
     ME_MaskType         getDmemMask(unsigned int encodedInstr) const;
     RF_WR_AccessType    getRegFileReqS5(unsigned int encodedInstr) const;
@@ -121,11 +125,7 @@ public:
     bool                getStallTwice(EncType currEncType, EncType prevEncType, unsigned int regRs1Addr, unsigned int regRs2Addr, unsigned int regRdAddr) const;
     unsigned int        getPC(PC_SelType pcSel, unsigned int imm, bool branchTaken, unsigned int reg1Content, unsigned int pcReg) const;
 
-#ifdef LOGTOFILE
-    InstrType instrType_prev2;
-    InstrType instrType_prev3;
-#endif
-
+    void run(); // thread
 };
 
 
@@ -192,7 +192,7 @@ void Control_unit::run() {
             DEtoCU_data.aluFunc_s3 = getALUfunc(encodedInstr);
             DEtoCU_data.aluOp1Sel_s3 = getALUop1Sel(encodedInstr);
             DEtoCU_data.aluOp2Sel_s3 = getALUop2Sel(encodedInstr);
-            DEtoCU_data.imm_s3 = getImmS5(encodedInstr);
+            DEtoCU_data.imm_s3 = getImmS3(encodedInstr);
             DEtoCU_data.dmemReq_s4 = getDmemReq(encodedInstr);
             DEtoCU_data.dmemMask_s4 = getDmemMask(encodedInstr);
             DEtoCU_data.regFileReq_s5 = getRegFileReqS5(encodedInstr);
@@ -788,7 +788,7 @@ AL_OperandSelType Control_unit::getALUop2Sel(unsigned int encodedInstr) const {
     }
 }
 
-unsigned int Control_unit::getImmS5(unsigned int encodedInstr) const {
+unsigned int Control_unit::getImmS3(unsigned int encodedInstr) const {
 
     if (OPCODE_FIELD(encodedInstr) == OPCODE_I_I || OPCODE_FIELD(encodedInstr) == OPCODE_I_L) {
         if (SIGN_FIELD(encodedInstr) == 1) {

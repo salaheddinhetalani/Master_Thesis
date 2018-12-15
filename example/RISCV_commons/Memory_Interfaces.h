@@ -13,6 +13,7 @@ enum ME_AccessType {
     ME_X, ME_RD, ME_WR
 };
 
+
 struct COtoME_IF {
     ME_AccessType req;
     ME_MaskType mask;

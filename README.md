@@ -11,6 +11,6 @@ The Implementation of the piplined CPU follows the following steps:
 
 ## Remarks
 - System level design of the pipelined CPU could be found in the [ESL](https://github.com/salaheddinhetalani/Master_Thesis/tree/master/example/RISCV_Pipelined/ESL) folder.
-- Assembly [programs](https://github.com/salaheddinhetalani/Master_Thesis/tree/master/example/RISCV_Test/Programs) as well as [instruction tests](https://github.com/salaheddinhetalani/Master_Thesis/tree/master/example/RISCV_Test/Instruction_Tests) have been developed to [test](https://github.com/salaheddinhetalani/Master_Thesis/tree/master/example/RISCV_Test/ESL/Core_test.h) the CPU, as both Pipelined or single cycle implementation, on system level.
+- Assembly [programs](https://github.com/salaheddinhetalani/Master_Thesis/tree/master/example/RISCV_Test/Programs) as well as [instruction tests](https://github.com/salaheddinhetalani/Master_Thesis/tree/master/example/RISCV_Test/Instruction_Tests) have been developed to [test](https://github.com/salaheddinhetalani/Master_Thesis/tree/master/example/RISCV_Test/ESL/ISS.h) the CPU, as both Pipelined or single cycle implementation, on system level.
 
 *NOTE: README FILES WOULD BE ADDED ON THE 15th OF DEC 2018*

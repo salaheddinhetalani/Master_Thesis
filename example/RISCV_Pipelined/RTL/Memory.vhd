@@ -16,14 +16,14 @@ use work.SCAM_Model_types.all;
 
 entity Memory is
     port(
-        clk                  : in  std_logic;
-        rst                  : in  std_logic;
-        CtlToMem_port        : in  COtoME_IF;
-        CtlToMem_port_sync   : in  bool;
-        CtlToMem_port_notify : out bool;
-        MemToCtl_port        : out MEtoCO_IF;
-        MemToCtl_port_sync   : in  bool;
-        MemToCtl_port_notify : out bool
+        clk                : in  std_logic;
+        rst                : in  std_logic;
+        COtoME_port        : in  COtoME_IF;
+        COtoME_port_sync   : in  bool;
+        COtoME_port_notify : out bool;
+        MEtoCO_port        : out MEtoCO_IF;
+        MEtoCO_port_sync   : in  bool;
+        MEtoCO_port_notify : out bool
     );
 end Memory;
 
@@ -68,10 +68,10 @@ begin
 
                 -- Specify Program to be loaded into Memory
                 --ram <= (others => (others => '0'));
-                ram <= InitMemFromFile("/import/lab/users/hetalani/SCAM/example/RISCV_Test/Programs/Fibonacci_c/main.HEX");
-                MemToCtl_port.loadedData <= (others => '0');
-                CtlToMem_port_notify <= true;
-                MemToCtl_port_notify <= false;
+                ram <= InitMemFromFile("/import/lab/users/hetalani/Master_Thesis/example/RISCV_Test/Programs/test_1.hex");
+                MEtoCO_port.loadedData <= (others => '0');
+                COtoME_port_notify <= true;
+                MEtoCO_port_notify <= false;
                 section <= read;
                 byte_temp := (others => '0');
 
@@ -79,88 +79,88 @@ begin
 
                 if section = read then
 
-                    if CtlToMem_port_sync = true then
+                    if COtoME_port_sync = true then
 
                         -- READ
-                        if CtlToMem_port.req = ME_RD then
+                        if COtoME_port.req = ME_RD then
 
                             -- Read Byte
-                            if    (CtlToMem_port.addrIn < MEM_SIZE) and (CtlToMem_port.mask = MT_B) then
+                            if    (COtoME_port.addrIn < MEM_SIZE) and (COtoME_port.mask = MT_B) then
 
-                                byte_temp := ram(to_integer(CtlToMem_port.addrIn));
+                                byte_temp := ram(to_integer(COtoME_port.addrIn));
 
                                 -- Sign-Extend
                                 if (byte_temp (7) = '1') then
-                                    MemToCtl_port.loadedData <= X"FFFFFF" & byte_temp;
+                                    MEtoCO_port.loadedData <= X"FFFFFF" & byte_temp;
                                 else
-                                    MemToCtl_port.loadedData <= X"000000" & byte_temp;
+                                    MEtoCO_port.loadedData <= X"000000" & byte_temp;
                                 end if;
 
                             -- Read Halfword
-                            elsif (CtlToMem_port.addrIn < MEM_SIZE-1) and (CtlToMem_port.mask = MT_H) then
+                            elsif (COtoME_port.addrIn < MEM_SIZE-1) and (COtoME_port.mask = MT_H) then
 
-                                byte_temp := ram(to_integer(CtlToMem_port.addrIn) + 1);
+                                byte_temp := ram(to_integer(COtoME_port.addrIn) + 1);
 
                                 -- Sign-Extend
                                 if (byte_temp (7) = '1') then
-                                    MemToCtl_port.loadedData <= X"FFFF" & byte_temp & ram(to_integer(CtlToMem_port.addrIn));
+                                    MEtoCO_port.loadedData <= X"FFFF" & byte_temp & ram(to_integer(COtoME_port.addrIn));
                                 else
-                                    MemToCtl_port.loadedData <= X"0000" & byte_temp & ram(to_integer(CtlToMem_port.addrIn));
+                                    MEtoCO_port.loadedData <= X"0000" & byte_temp & ram(to_integer(COtoME_port.addrIn));
                                 end if;
 
                             -- Read Word
-                            elsif (CtlToMem_port.addrIn < MEM_SIZE-3) and (CtlToMem_port.mask = MT_W) then
+                            elsif (COtoME_port.addrIn < MEM_SIZE-3) and (COtoME_port.mask = MT_W) then
 
-                                MemToCtl_port.loadedData <= ram(to_integer(CtlToMem_port.addrIn) + 3)
-                                                          & ram(to_integer(CtlToMem_port.addrIn) + 2)
-                                                          & ram(to_integer(CtlToMem_port.addrIn) + 1)
-                                                          & ram(to_integer(CtlToMem_port.addrIn));
+                                MEtoCO_port.loadedData <= ram(to_integer(COtoME_port.addrIn) + 3)
+                                                        & ram(to_integer(COtoME_port.addrIn) + 2)
+                                                        & ram(to_integer(COtoME_port.addrIn) + 1)
+                                                        & ram(to_integer(COtoME_port.addrIn));
 
                             -- Read Byte Unsigned
-                            elsif (CtlToMem_port.addrIn < MEM_SIZE) and (CtlToMem_port.mask = MT_BU) then
+                            elsif (COtoME_port.addrIn < MEM_SIZE) and (COtoME_port.mask = MT_BU) then
 
-                                byte_temp := ram(to_integer(CtlToMem_port.addrIn));
+                                byte_temp := ram(to_integer(COtoME_port.addrIn));
 
-                                MemToCtl_port.loadedData <= X"000000" & byte_temp;
+                                MEtoCO_port.loadedData <= X"000000" & byte_temp;
 
                             -- Read Halfword Unsigned
-                            elsif (CtlToMem_port.addrIn < MEM_SIZE-1) and (CtlToMem_port.mask = MT_HU) then
+                            elsif (COtoME_port.addrIn < MEM_SIZE-1) and (COtoME_port.mask = MT_HU) then
 
-                                byte_temp := ram(to_integer(CtlToMem_port.addrIn) + 1);
+                                byte_temp := ram(to_integer(COtoME_port.addrIn) + 1);
 
-                                MemToCtl_port.loadedData <= X"0000" & byte_temp & ram(to_integer(CtlToMem_port.addrIn));
+                                MEtoCO_port.loadedData <= X"0000" & byte_temp & ram(to_integer(COtoME_port.addrIn));
 
                             end if;
 
                         -- WRITE
-                        elsif CtlToMem_port.req = ME_WR then
+                        elsif COtoME_port.req = ME_WR then
 
                             -- Write Byte
-                            if    (CtlToMem_port.addrIn < MEM_SIZE) and (CtlToMem_port.mask = MT_B) then
+                            if    (COtoME_port.addrIn < MEM_SIZE) and (COtoME_port.mask = MT_B) then
 
-                                ram(to_integer(CtlToMem_port.addrIn)) <= CtlToMem_port.dataIn (7 downto 0);
+                                ram(to_integer(COtoME_port.addrIn)) <= COtoME_port.dataIn (7 downto 0);
 
                             -- Write Halfword
-                            elsif (CtlToMem_port.addrIn < MEM_SIZE-1) and (CtlToMem_port.mask = MT_H) then
+                            elsif (COtoME_port.addrIn < MEM_SIZE-1) and (COtoME_port.mask = MT_H) then
 
-                                ram(to_integer(CtlToMem_port.addrIn) + 1) <= CtlToMem_port.dataIn (15 downto 8);
-                                ram(to_integer(CtlToMem_port.addrIn))     <= CtlToMem_port.dataIn ( 7 downto 0);
+                                ram(to_integer(COtoME_port.addrIn) + 1) <= COtoME_port.dataIn (15 downto 8);
+                                ram(to_integer(COtoME_port.addrIn))     <= COtoME_port.dataIn ( 7 downto 0);
 
                             -- Write Word
-                            elsif (CtlToMem_port.addrIn < MEM_SIZE-3) and (CtlToMem_port.mask = MT_W) then
+                            elsif (COtoME_port.addrIn < MEM_SIZE-3) and (COtoME_port.mask = MT_W) then
 
-                                ram(to_integer(CtlToMem_port.addrIn) + 3) <= CtlToMem_port.dataIn (31 downto 24);
-                                ram(to_integer(CtlToMem_port.addrIn) + 2) <= CtlToMem_port.dataIn (23 downto 16);
-                                ram(to_integer(CtlToMem_port.addrIn) + 1) <= CtlToMem_port.dataIn (15 downto  8);
-                                ram(to_integer(CtlToMem_port.addrIn))     <= CtlToMem_port.dataIn ( 7 downto  0);
+                                ram(to_integer(COtoME_port.addrIn) + 3) <= COtoME_port.dataIn (31 downto 24);
+                                ram(to_integer(COtoME_port.addrIn) + 2) <= COtoME_port.dataIn (23 downto 16);
+                                ram(to_integer(COtoME_port.addrIn) + 1) <= COtoME_port.dataIn (15 downto  8);
+                                ram(to_integer(COtoME_port.addrIn))     <= COtoME_port.dataIn ( 7 downto  0);
 
                             end if;
 
                         end if;
 
-                        CtlToMem_port_notify <= false;
+                        COtoME_port_notify <= false;
 
-                        MemToCtl_port_notify <= true;
+                        MEtoCO_port_notify <= true;
 
                         section <= write;
 
@@ -168,11 +168,11 @@ begin
 
                 elsif section = write then
 
-                    if MemToCtl_port_sync = true then
+                    if MEtoCO_port_sync = true then
 
-                        CtlToMem_port_notify <= true;
+                        COtoME_port_notify <= true;
 
-                        MemToCtl_port_notify <= false;
+                        MEtoCO_port_notify <= false;
 
                         section <= read;
 

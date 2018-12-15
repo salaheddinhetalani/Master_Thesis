@@ -11,12 +11,12 @@ entity Core is
     port(
         clk                : in  std_logic;
         rst                : in  std_logic;
-        CUtoME_port        : out COtoME_IF;
-        CUtoME_port_sync   : in  bool;
-        CUtoME_port_notify : out bool;
-        MEtoCU_port        : in  MEtoCO_IF;
-        MEtoCU_port_sync   : in  bool;
-        MEtoCU_port_notify : out bool
+        COtoME_port        : out COtoME_IF;
+        COtoME_port_sync   : in  bool;
+        COtoME_port_notify : out bool;
+        MEtoCO_port        : in  MEtoCO_IF;
+        MEtoCO_port_sync   : in  bool;
+        MEtoCO_port_notify : out bool
     );
 end Core;
 
@@ -78,12 +78,12 @@ begin
         port map (
             clk                => clk,
             rst                => rst,
-            CUtoME_port        => CUtoME_port,
-            CUtoME_port_sync   => CUtoME_port_sync,
-            CUtoME_port_notify => CUtoME_port_notify,
-            MEtoCU_port        => MEtoCU_port,
-            MEtoCU_port_sync   => MEtoCU_port_sync,
-            MEtoCU_port_notify => MEtoCU_port_notify,
+            CUtoME_port        => COtoME_port,
+            CUtoME_port_sync   => COtoME_port_sync,
+            CUtoME_port_notify => COtoME_port_notify,
+            MEtoCU_port        => MEtoCO_port,
+            MEtoCU_port_sync   => MEtoCO_port_sync,
+            MEtoCU_port_notify => MEtoCO_port_notify,
             CUtoDE_port        => CUtoDE_port_sig,
             DEtoCU_port        => DEtoCU_port_sig,
             CUtoDP_port        => CUtoDP_port_sig,

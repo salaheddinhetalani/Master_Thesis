@@ -188,15 +188,15 @@ begin
 
                     if CUtoME_port_sync = true then
 
-                        CUtoME_port_notify <= false;
                         MEtoCU_port_notify <= true;
+                        CUtoME_port_notify <= false;
                         CUtoDP_port_notify <= false;
                         section <= readMem;
 
                     else
 
-                        CUtoME_port_notify <= true;
                         MEtoCU_port_notify <= false;
+                        CUtoME_port_notify <= true;
                         CUtoDP_port_notify <= false;
 
                     end if;

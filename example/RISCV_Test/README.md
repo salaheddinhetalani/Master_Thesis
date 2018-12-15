@@ -8,7 +8,7 @@ The folder ESL containts the implementation and the build-system:
     * blocking_in<MEtoCO_IF> MEtoCO_port;
     * *Make sure you use the same names*
     * Name your registers file readRegfile
-3) Add your Core.h to the Core_Test.h and uncomment all other cores
+3) Add your Core.h to the ISS.h and uncomment all other cores
 
 4) Enableing LOGTOFILE property in the CMakeLists.txt ensures that the 
 output is forwarded to a logfile (see comments in CMakeLists)

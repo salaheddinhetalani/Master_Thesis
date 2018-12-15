@@ -8,7 +8,7 @@ use ieee.numeric_std.all;
 
 package SCAM_Model_types is
 
-    constant MEM_SIZE : integer := 65536;
+    constant MEM_SIZE : Integer := 65536;
 
     subtype bool is Boolean;
     subtype int  is Integer;
@@ -28,14 +28,14 @@ package SCAM_Model_types is
                                  INSTR_JAL,
                                  INSTR_UNKNOWN);
     type EncType             is (ENC_R, ENC_I_I, ENC_I_L, ENC_I_J, ENC_S, ENC_B, ENC_U, ENC_J, ENC_ERR);
-    type ME_AccessType       is (ME_RD, ME_WR, ME_X);
-    type ME_MaskType         is (MT_B, MT_H, MT_W, MT_BU, MT_HU, MT_X);
+    type ME_AccessType       is (ME_X, ME_RD, ME_WR);
+    type ME_MaskType         is (MT_X, MT_B, MT_H, MT_W, MT_BU, MT_HU);
     type PC_SelType          is (PC_4, PC_JR, PC_BR, PC_J, PC_EXC);
-    type RF_RD_AccessType    is (RF_RD, RF_RD_X);
-    type RF_WR_AccessType    is (RF_WR, RF_WR_X);
-    type RF_WriteDataSelType is (WB_ALU, WB_MEM, WB_PC4, WB_X);
-    type ALUfuncType         is (ALU_ADD, ALU_SUB, ALU_SLL, ALU_SRL, ALU_SRA, ALU_AND, ALU_OR, ALU_XOR, ALU_SLT, ALU_SLTU, ALU_COPY1, ALU_X);
-    type AL_OperandSelType   is (OP_REG, OP_IMM, OP_PC, OP_X);
+    type RF_RD_AccessType    is (RF_RD_X, RF_RD);
+    type RF_WR_AccessType    is (RF_WR_X, RF_WR);
+    type RF_WriteDataSelType is (WB_X, WB_ALU, WB_MEM, WB_PC4);
+    type ALUfuncType         is (ALU_X, ALU_ADD, ALU_SUB, ALU_SLL, ALU_SRL, ALU_SRA, ALU_AND, ALU_OR, ALU_XOR, ALU_SLT, ALU_SLTU, ALU_COPY1);
+    type AL_OperandSelType   is (OP_X, OP_REG, OP_IMM, OP_PC);
 
     type COtoME_IF is record
         req    : ME_AccessType;

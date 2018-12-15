@@ -138,7 +138,7 @@ void Register_file::run() {
 
         fromRegfilePort->nb_write(regfile);
 
-        rec = toRegfilePort->nb_read(regfileWrite); // read request
+        rec = toRegfilePort->nb_read(regfileWrite);
 
         if (rec) {
 

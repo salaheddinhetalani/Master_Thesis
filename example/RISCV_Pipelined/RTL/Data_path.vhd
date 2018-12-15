@@ -43,11 +43,11 @@ architecture Data_path_arch of Data_path is
     signal DPtoRF_port        : DPtoRF_IF;
     signal DPtoRF_port_notify : bool;
     signal RFtoDP_port        : RFtoDP_IF;
-    signal DPtoAL_port : DPtoAL_IF;
-    signal ALtoDP_port : ALtoDP_IF;
-    signal DP_S3_data : DP_S3;
-    signal DP_S4_data : DP_S4;
-    signal DP_S5_data : DP_S5;
+    signal DPtoAL_port        : DPtoAL_IF;
+    signal ALtoDP_port        : ALtoDP_IF;
+    signal DP_S3_data         : DP_S3;
+    signal DP_S4_data         : DP_S4;
+    signal DP_S5_data         : DP_S5;
 
 begin
 
@@ -188,7 +188,7 @@ begin
 
                     -- ID STAGE FORWARDING: REG_RS1_CONTENT
                     if (CUtoDP_port.regRs1Addr_s2 = 0) then
-                         reg1Content := (others => '0');
+                        reg1Content := (others => '0');
 
                     elsif (CUtoDP_port.regRs1Addr_s2 = DP_S5_data.regRdAddr_s5 and DP_S5_data.encType_s5 = ENC_I_L and CUtoDP_port.regRs1Addr_s2 /= DP_S4_data.regRdAddr_s4) then
                         reg1Content := CUtoDP_port.loadedData;
